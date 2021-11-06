@@ -5,7 +5,7 @@
       <img src="@/assets/AUBB.png" id="AUBB-logo">
     </div>
     <a-form :form="form" @submit="handleSubmit">
-      <a-form-item v-bind="formItemLayout" label="用户名">
+      <a-form-item v-bind="formItemLayout" label="用户名" has-feedback>
         <a-input
             v-decorator="[
           'userName',
@@ -51,11 +51,11 @@
       <!--        </a>-->
       <!--      </a-checkbox>-->
       <!--    </a-form-item>-->
-      <a-form-item v-bind="tailFormItemLayout">
-        <a-button type="primary" html-type="submit" @click="login">
+      <div style="text-align: center">
+        <a-button type="primary" html-type="submit">
           登录
         </a-button>
-      </a-form-item>
+      </div>
     </a-form>
   </div>
 </template>
@@ -74,7 +74,7 @@ export default {
         },
         wrapperCol: {
           xs: { span: 24 },
-          sm: { span: 16 },
+          sm: { span: 8 },
         },
       },
       tailFormItemLayout: {
@@ -100,6 +100,23 @@ export default {
       this.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
+          this.$axios.post('http://127.0.0.1:5000/Login', {
+            'userName': values.userName,
+            'password': values.password
+          }).then((response) => {
+            console.log(response.data)
+            this.$store.state.logged = true
+            this.$router.push('/DefaultPage')
+            this.$notification['success']({
+              message: '登录成功',
+            })
+          }).catch((e) => {
+            console.log(e)
+            this.$notification['error']({
+              message: '登录失败',
+              description: '用户名或密码错误'
+            })
+          })
         }
       });
     },
@@ -131,9 +148,6 @@ export default {
       }
       this.autoCompleteResult = autoCompleteResult;
     },
-    login() {
-      this.$store.state.logged = true;
-    }
   },
 };
 </script>

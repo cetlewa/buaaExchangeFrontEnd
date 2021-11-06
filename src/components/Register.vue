@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-form :form="form" @submit="handleSubmit">
-      <a-form-item v-bind="formItemLayout" label="用户名">
+      <a-form-item v-bind="formItemLayout" label="用户名" has-feedback>
         <a-input
             v-decorator="[
           'userName',
@@ -80,7 +80,30 @@
           </a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="电话号码">
+      <a-form-item v-bind="formItemLayout" label="年级" has-feedback>
+        <a-select default-value="1" v-decorator="[
+          'grade',
+          {
+            rules: [
+                {
+                  required: true,
+                  message: '请选择年级！'
+                },
+              ]
+          }
+        ]">
+          <a-select-option value="1">
+            本科生
+          </a-select-option>
+          <a-select-option value="2">
+            硕士生
+          </a-select-option>
+          <a-select-option value="3">
+            博士生
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="电话号码" has-feedback>
         <a-input
             v-decorator="[
           'tel',
@@ -107,8 +130,11 @@
             <a-select-option value="86">
               +86
             </a-select-option>
-            <a-select-option value="010">
-              +010
+            <a-select-option value="1">
+              +1
+            </a-select-option>
+            <a-select-option value="4">
+              +44
             </a-select-option>
           </a-select>
         </a-input>
@@ -134,25 +160,25 @@
           </a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item v-bind="tailFormItemLayout" style="margin-bottom: 10px">
-        <a-checkbox v-decorator="[
-            'agreement',
-            {
-              valuePropName: 'checked',
-            },
-            ]">
-          我已阅读
-          <router-link to="/RelevantRule">
-            相关条约
-          </router-link>
-          并同意
-        </a-checkbox>
-      </a-form-item>
-      <a-form-item v-bind="tailFormItemLayout">
+<!--      <a-form-item v-bind="tailFormItemLayout" style="margin-bottom: 10px">-->
+<!--        <a-checkbox v-decorator="[-->
+<!--            'agreement',-->
+<!--            {-->
+<!--              valuePropName: 'checked',-->
+<!--            },-->
+<!--            ]">-->
+<!--          我已阅读-->
+<!--          <router-link to="/RelevantRule">-->
+<!--            相关条约-->
+<!--          </router-link>-->
+<!--          并同意-->
+<!--        </a-checkbox>-->
+<!--      </a-form-item>-->
+      <div style="text-align: center">
         <a-button type="primary" html-type="submit">
           注册
         </a-button>
-      </a-form-item>
+      </div>
     </a-form>
   </div>
 </template>
@@ -172,7 +198,7 @@ export default {
         },
         wrapperCol: {
           xs: { span: 24 },
-          sm: { span: 16 },
+          sm: { span: 8 },
         },
       },
       tailFormItemLayout: {
@@ -198,20 +224,20 @@ export default {
       this.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
-          this.$axios.post('http://127.0.0.1:5000/signup', {
-            'stuId': values.stuId,
+          this.$axios.post('http://127.0.0.1:5000/Register', {
+            'userName': values.userName,
             'password': values.password,
-            'nickName': values.nickName,
-            'sex': values.sex,
-            'phone': values.phone,
-            'email': values.email
+            'gender': values.gender,
+            'grade': values.grade,
+            'district': values.district,
+            'tel': values.tel
           }).then((response) =>{
             console.log(response)
             this.$notification['success']({
               message: '注册成功',
               description: ''
             })
-            this.$router.push('Login')
+            this.$router.push('RegisterSuccess')
           }).catch((e) => {
             console.log(e)
             this.$notification['error']({
@@ -229,7 +255,7 @@ export default {
     compareToFirstPassword(rule, value, callback) {
       const form = this.form;
       if (value && value !== form.getFieldValue('password')) {
-        callback('Two passwords that you enter is inconsistent!');
+        callback('两次密码不一致!');
       } else {
         callback();
       }

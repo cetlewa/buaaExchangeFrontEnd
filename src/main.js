@@ -26,6 +26,26 @@ const Routers = [
   {
     path: '/RelevantRule',
     component: require('./components/RelevantRule').default
+  },
+  {
+    path: '/Information',
+    component: require('./components/Information').default
+  },
+  {
+    path: '/MyMessages',
+    component: require('./components/MyMessages').default
+  },
+  {
+    path: '/RegisterSuccess',
+    component: require('./components/RegisterSuccess').default
+  },
+  {
+    path: '/Test',
+    component: require('./components/Test').default
+  },
+  {
+    path: '/DefaultPage',
+    component: require('./components/DefaultPage').default
   }
 ]
 
@@ -38,8 +58,9 @@ const router = new VueRouter(RouterConfig)
 const store = new Vuex.Store({
   state: {
     logged: true,
-    stuId: '',
-    currentWeb: ''
+    userID: '',
+    currentWeb: '',
+    ip: 'http://127.0.0.1:5000/'
   }
 })
 

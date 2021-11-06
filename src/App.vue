@@ -9,19 +9,24 @@
             <span>主页</span>
             <router-link to="/DefaultPage"></router-link>
           </a-menu-item>
-          <a-menu-item v-show="this.$store.state.logged === true" key="4">
-            <a-icon type="user" />
-            <span>个人信息</span>
-            <router-link to="/Information"></router-link>
-          </a-menu-item>
-          <a-menu-item v-show="this.$store.state.logged === true" key="5">
+<!--          <a-menu-item v-show="this.$store.state.logged === true" key="4">-->
+<!--            <a-icon type="user" />-->
+<!--            <span>注册成功</span>-->
+<!--            <router-link to="/RegisterSuccess"></router-link>-->
+<!--          </a-menu-item>-->
+          <a-menu-item key="5">
             <a-icon type="appstore" />
-            <span>课表查询</span>
+            <span>浏览</span>
             <router-link to="/Schedule"></router-link>
           </a-menu-item>
           <a-menu-item v-show="this.$store.state.logged === true" key="6">
             <a-icon type="shop" />
-            <span>学生选课</span>
+            <span>我的商品</span>
+            <router-link to="/SelectLesson"></router-link>
+          </a-menu-item>
+          <a-menu-item v-show="this.$store.state.logged === true" key="7">
+            <a-icon type="shop" />
+            <span>我的订单</span>
             <router-link to="/SelectLesson"></router-link>
           </a-menu-item>
         </a-menu>
@@ -36,15 +41,33 @@
           <span id="components-layout-demo-custom-welcome" style="font-weight: bolder;font-size: x-large">
             航·易-BUAA EXCHANGE
           </span>
+
           <span id="self-information-logout" v-show="this.$store.state.logged === false">
             <a-button type="" style="margin: 10px" @click="login">登录</a-button>
             <a-button type="" style="margin: 10px" @click="register">注册</a-button>
-            <a-icon type="user" style="margin-left: 10px;font-size: large;border-radius: 50%;background-color: gainsboro"/>
+            <a-avatar icon="user" style="margin-left: 10px;font-size: large;border-radius: 50%;background-color: gainsboro"/>
           </span>
+
           <span id="self-information-login" v-show="this.$store.state.logged === true">
-            <a-button type="danger" style="margin: 10px" icon="poweroff" @click="logout">注销</a-button>
-            <a-icon type="check-circle" theme="twoTone" two-tone-color="#52c41a" style="margin-left: 10px;
-            font-size: large;border-radius: 50%;background-color: gainsboro;"/>
+<!--            <a-button type="danger" style="margin: 10px" icon="poweroff" @click="logout">注销</a-button>-->
+            <a-dropdown :trigger="['click']">
+              <a class="ant-dropdown-link" >
+                <a-avatar icon="user" style="margin-left: 10px;font-size: large;border-radius: 50%;background-color: #87d068"/>
+              </a>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a @click="checkInfo"><a-icon type="user" />&nbsp;&nbsp;个人信息</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="checkMessages"><a-icon type="message" />&nbsp;&nbsp;私信</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="logout"><a-icon type="poweroff" />&nbsp;&nbsp;注销</a>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+<!--            <a-icon type="check-circle" theme="twoTone" two-tone-color="#52c41a" style="margin-left: 10px;-->
+<!--            font-size: large;border-radius: 50%;background-color: gainsboro;"/>-->
           </span>
 
         </a-layout-header>
@@ -83,7 +106,7 @@ export default {
       console.log(this.$store.state)
       this.$router.push(this.$store.state.currentWeb)
     } else {
-      this.$router.push('DefaultPage')
+      this.$router.push('Test')
     }
 
     window.addEventListener("beforeunload",()=>{
@@ -102,6 +125,12 @@ export default {
     },
     register() {
       this.$router.push('/Register')
+    },
+    checkInfo() {
+      this.$router.push('/Information')
+    },
+    checkMessages() {
+      this.$router.push('/MyMessages')
     }
   }
 
