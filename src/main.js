@@ -46,6 +46,18 @@ const Routers = [
   {
     path: '/DefaultPage',
     component: require('./components/DefaultPage').default
+  },
+  {
+    path: '/MyGoods',
+    component: require('./components/MyGoods').default
+  },
+  {
+    path: '/UploadGoods',
+    component: require('./components/UploadGoods').default
+  },
+  {
+    path: '/CheckGood',
+    component: require('./components/CheckGood').default
   }
 ]
 
@@ -60,7 +72,8 @@ const store = new Vuex.Store({
     logged: true,
     userID: '',
     currentWeb: '',
-    ip: 'http://127.0.0.1:5000/'
+    goodId: '',
+    ip: 'http://127.0.0.1:5000/',
   }
 })
 

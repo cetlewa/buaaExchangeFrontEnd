@@ -12,7 +12,7 @@
           {
             rules: [
               {
-                pattern: '^[0-9]{8}$',
+                pattern: '^[0-9a-zA-Z]{1,10}$',
                 message: '请输入正确格式的用户名！',
               },
               {
@@ -106,6 +106,7 @@ export default {
           }).then((response) => {
             console.log(response.data)
             this.$store.state.logged = true
+            this.$store.state.userID = response.data.userID
             this.$router.push('/DefaultPage')
             this.$notification['success']({
               message: '登录成功',

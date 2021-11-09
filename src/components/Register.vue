@@ -8,12 +8,12 @@
           {
             rules: [
               {
-                pattern: '^[0-9]{8}$',
-                message: '输入不合规范！请输入8位数字！',
+                pattern: '^[0-9a-zA-Z]{1,10}$',
+                message: '输入不合规范！支持1-10位大小写字母和数字',
               },
               {
                 required: true,
-                message: '请输入学号！',
+                message: '请输入用户名！',
               },
             ],
           },
@@ -188,7 +188,6 @@
 export default {
   data() {
     return {
-      checkNick: true,
       confirmDirty: false,
       autoCompleteResult: [],
       formItemLayout: {

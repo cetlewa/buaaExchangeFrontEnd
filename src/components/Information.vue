@@ -9,7 +9,7 @@
         </a-col>
         <a-col :span="12">
           <a-card title="ID" :bordered="false">
-            <p>card content</p>
+            <p>{{userId}}</p>
           </a-card>
         </a-col>
       </a-row>
@@ -26,10 +26,10 @@
               </a>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <a @click="changeGender('男')">男</a>
+                  <a @click="changeGender('0')">男</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="changeGender('女')">女</a>
+                  <a @click="changeGender('1')">女</a>
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
@@ -46,10 +46,10 @@
               </a>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <a @click="changeDistrict('学院路校区')">学院路校区</a>
+                  <a @click="changeDistrict('0')">学院路校区</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="changeDistrict('沙河校区')">沙河校区</a>
+                  <a @click="changeDistrict('1')">沙河校区</a>
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
@@ -69,13 +69,13 @@
               </a>
               <a-menu slot="overlay">
                 <a-menu-item>
-                  <a @click="changeGrade('本科生')">本科生</a>
+                  <a @click="changeGrade('0')">本科生</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="changeGrade('硕士生')">硕士生</a>
+                  <a @click="changeGrade('1')">硕士生</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="changeGrade('博士生')">博士生</a>
+                  <a @click="changeGrade('2')">博士生</a>
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
@@ -112,36 +112,99 @@ export default {
   name: "Information",
   data() {
     return {
-      userName: 'buaaboy',
-      gender: '男',
-      tel: '123',
-      district: '学院路校区',
-      grade: '本科生',
+      userName: '',
+      userId: this.$store.state.userID + 10000,
+      gender: '',
+      tel: '',
+      district: '',
+      grade: '',
       margin_card: 50,
-      editable: false
+      editable: false,
+      tel_temp: ''
     }
   },
   methods: {
     changeGender(genderIndex){
-      this.gender = genderIndex
+      let that = this
+      this.$axios.post('http://127.0.0.1:5000/QueryInfoChangeGender', {
+        'userId': that.$store.state.userID,
+        'gender': genderIndex
+      }).then((response) => {
+        console.log(response.data)
+        that.gender = (response.data.gender === '0') ? '男' : '女'
+        this.$notification['success']({
+          message: '修改成功！'
+        })
+      })
     },
     changeDistrict(districtIndex) {
-      this.district = districtIndex
+      let that = this
+      this.$axios.post('http://127.0.0.1:5000/QueryInfoChangeDistrict', {
+        'userId': that.$store.state.userID,
+        'district': districtIndex
+      }).then((response) => {
+        console.log(response.data)
+        that.district = (response.data.district === '0') ? '学院路校区' : '沙河校区'
+        this.$notification['success']({
+          message: '修改成功！'
+        })
+      })
     },
     changeGrade(gradeIndex) {
-      this.grade = gradeIndex
+      let that = this
+      this.$axios.post('http://127.0.0.1:5000/QueryInfoChangeGrade', {
+        'userId': that.$store.state.userID,
+        'grade': gradeIndex
+      }).then((response) => {
+        console.log(response.data)
+        that.grade = (response.data.grade === '0') ? '本科生' : (response.data.grade === '1') ? '硕士生' : '博士生'
+        this.$notification['success']({
+          message: '修改成功！'
+        })
+      })
     },
     handleChange(e) {
       let tel = e.target.value;
-      this.tel = tel;
+      this.tel_temp = tel
     },
     check() {
       this.editable = false;
       // this.$emit('change', this.value);
+      let that = this
+      this.$axios.post('http://127.0.0.1:5000/QueryInfoChangeTel', {
+        'userId': that.$store.state.userID,
+        'tel': that.tel_temp
+      }).then((response) => {
+        console.log(response.data)
+        that.tel = response.data.tel
+        this.$notification['success']({
+          message: '修改成功！'
+        })
+      }).catch((e) => {
+        console.log(e)
+        this.$notification['error']({
+          message: '修改失败！',
+          description: '请检查电话的格式！'
+        })
+      })
     },
     edit() {
       this.editable = true;
     },
+  },
+  created() {
+    let that = this
+    this.$axios.post('http://127.0.0.1:5000/QueryInfo', {
+      'userId': that.$store.state.userID
+    }).then((response) => {
+      console.log(response.data)
+      console.log(response.data.userName)
+      that.userName = response.data.userName
+      that.gender = (response.data.gender === '0') ? '男' : '女'
+      that.district = (response.data.district === '0') ? '学院路校区' : '沙河校区'
+      that.tel = response.data.tel
+      that.grade = (response.data.grade === '0') ? '本科生' : (response.data.grade === '1') ? '硕士生' : '博士生'
+    })
   }
 }
 </script>

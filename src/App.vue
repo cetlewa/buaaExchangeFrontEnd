@@ -22,12 +22,17 @@
           <a-menu-item v-show="this.$store.state.logged === true" key="6">
             <a-icon type="shop" />
             <span>我的商品</span>
-            <router-link to="/SelectLesson"></router-link>
+            <router-link to="/MyGoods"></router-link>
           </a-menu-item>
           <a-menu-item v-show="this.$store.state.logged === true" key="7">
             <a-icon type="shop" />
             <span>我的订单</span>
             <router-link to="/SelectLesson"></router-link>
+          </a-menu-item>
+          <a-menu-item v-show="this.$store.state.logged === true" key="8">
+            <a-icon type="message" />
+            <span>我的私信</span>
+            <router-link to="/MyMessages"></router-link>
           </a-menu-item>
         </a-menu>
       </a-layout-sider>
@@ -58,9 +63,9 @@
                 <a-menu-item>
                   <a @click="checkInfo"><a-icon type="user" />&nbsp;&nbsp;个人信息</a>
                 </a-menu-item>
-                <a-menu-item>
-                  <a @click="checkMessages"><a-icon type="message" />&nbsp;&nbsp;私信</a>
-                </a-menu-item>
+<!--                <a-menu-item>-->
+<!--                  <a @click="checkMessages"><a-icon type="message" />&nbsp;&nbsp;私信</a>-->
+<!--                </a-menu-item>-->
                 <a-menu-item>
                   <a @click="logout"><a-icon type="poweroff" />&nbsp;&nbsp;注销</a>
                 </a-menu-item>
@@ -99,14 +104,10 @@ export default {
     };
   },
   created() {
-    this.$store.state.logged = true
     if (window.sessionStorage.getItem("list") ) {
       this.$store.replaceState(Object.assign({}, this.$store.state,JSON.parse(window.sessionStorage.getItem("list"))))
       console.log(window.sessionStorage.getItem("list"))
-      console.log(this.$store.state)
       this.$router.push(this.$store.state.currentWeb)
-    } else {
-      this.$router.push('Test')
     }
 
     window.addEventListener("beforeunload",()=>{
@@ -116,9 +117,9 @@ export default {
   methods:{
     logout() {
       this.$store.state.logged = false
-      this.$store.state.stuId = ""
+      this.$store.state.userID = ""
       this.selectKeys = "[]"
-      this.$router.push('DefaultPage')
+      this.$router.push('/DefaultPage')
     },
     login() {
       this.$router.push('/Login')
@@ -129,9 +130,6 @@ export default {
     checkInfo() {
       this.$router.push('/Information')
     },
-    checkMessages() {
-      this.$router.push('/MyMessages')
-    }
   }
 
 };
